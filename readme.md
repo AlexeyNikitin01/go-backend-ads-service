@@ -1,22 +1,14 @@
-## Домашняя работа №10
+## Ads Service / Cервис объявлений
 
-Необходимо доработать сервис объявлений из ДЗ №9.
-Для этого аккуратно перенесите его реализацию в `lesson10/homework`.
+Что есть в проекте:
+- Чистая архитектура:
+  - Entities: ads, user
+  - Use cases: app
+  - Interfaces / adapters: adrepo, userrepo
+  - Infrastructure: httpgin, grpc
+- Фреймворк: Gin,
+- APIs: REST, gRPC (by protoc-gen-go-grpc),
+- Tests: unit, integration, fuzz, benchmark, mock (by mockery v2.20.0), coverage проекта более 80%,
+- Graceful shutdown,
+- Подключен собственный модуль валидации данных: https://github.com/AlexeyNikitin01/validate/tree/v1.2.3
 
-## Требования
-
-- Coverage проекта должен быть более 80%
-
-## Критерии оценки
-
-- используются моки - до 2-х баллов
-- есть хотя бы один табличный тест - до 2-х баллов
-- есть хотя бы один suite.Suite для реализации setup/teardown - до 2-х баллов
-- есть хотя бы один go-fuzz - до 2-х баллов
-- есть хотя бы один бенчмарк - до 2-х баллов
-
-## Примечание
-
-Для моков можно использовать встроенную либу или https://github.com/vektra/mockery
-В usecase мокаем repository, а в handlers мокаем usecase
-Сгенерировать отчет о покрытии и предоставить скрины в виде отчета в pdf
