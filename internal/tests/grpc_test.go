@@ -7,10 +7,12 @@ import (
 	"time"
 
 	"ads/internal/adapters/adrepo"
+	"ads/internal/adapters/pgrepo"
 	"ads/internal/adapters/userrepo"
 	"ads/internal/app"
 	grpcPort "ads/internal/ports/grpc"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -30,7 +32,23 @@ func getClientGRPC() (grpcPort.AdServiceClient, context.Context) {
 	)
 	defer srv.Stop()
 
-	svc := grpcPort.NewService(app.NewApp(adrepo.New(), userrepo.New()))
+	logrus.SetFormatter(new(logrus.JSONFormatter))
+
+	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
+		Host:     "localhost",
+		Port:     "5432",
+		Username: "postgres",
+		DBName:   "postgres",
+		SSLMode:  "disable",
+		Password: "qwerty",
+	})
+	if err != nil {
+		logrus.Fatalf("failed to initialize db: %s", err.Error())
+	}
+
+	a := app.NewApp(adrepo.New(), userrepo.New(), pgrepo.NewAuthPostgres(db))
+
+	svc := grpcPort.NewService(a)
 	grpcPort.RegisterAdServiceServer(srv, svc)
 
 	dialer := func(context.Context, string) (net.Conn, error) {
@@ -63,7 +81,23 @@ func Client(t *testing.T) (grpcPort.AdServiceClient, context.Context) {
 		srv.Stop()
 	})
 
-	svc := grpcPort.NewService(app.NewApp(adrepo.New(), userrepo.New()))
+	logrus.SetFormatter(new(logrus.JSONFormatter))
+
+	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
+		Host:     "localhost",
+		Port:     "5432",
+		Username: "postgres",
+		DBName:   "postgres",
+		SSLMode:  "disable",
+		Password: "qwerty",
+	})
+	if err != nil {
+		logrus.Fatalf("failed to initialize db: %s", err.Error())
+	}
+
+	a := app.NewApp(adrepo.New(), userrepo.New(), pgrepo.NewAuthPostgres(db))
+
+	svc := grpcPort.NewService(a)
 	grpcPort.RegisterAdServiceServer(srv, svc)
 
 	go func() {

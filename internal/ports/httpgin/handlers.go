@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ads/internal/app"
+	"ads/internal/user"
 )
 
 func createAd(a app.App) gin.HandlerFunc {
@@ -392,5 +393,37 @@ func getUser(a app.App) gin.HandlerFunc {
 		}
 		log.Println("Success get user", http.StatusOK, "user id", u.UserID)
 		c.JSON(200, UserSuccessResponse(u))
+	}
+}
+
+func signUp(a app.App) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var requestCreateUserDB createUserDB
+
+		if err := c.Bind(&requestCreateUserDB); err != nil {
+			c.JSON(400, ErrUser(err))
+			log.Println("error user get", err)
+			return
+		}
+
+		id, err := a.CreateUserDb(user.UserDb{
+			Name: requestCreateUserDB.Name,
+			Username: requestCreateUserDB.Username,
+			Password: requestCreateUserDB.Password,
+		})
+		if err != nil {
+			if errors.Is(err, app.ErrBadRequest) {
+				c.JSON(400, AdErrorResponse(err))
+			} else {
+				c.JSON(500, AdErrorResponse(err))
+			}
+			c.JSON(200, AdErrorResponse(err))
+			log.Println("error create user", err)
+			return
+		}
+		c.Status(http.StatusOK)
+		c.JSON(200, CreateUserDbSuccess(id))
+		log.Default()
+		log.Println("Success create user", http.StatusOK, "user id", id)
 	}
 }

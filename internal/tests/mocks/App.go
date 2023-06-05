@@ -109,6 +109,30 @@ func (_m *App) CreateUser(ctx context.Context, nickname string, email string) (*
 	return r0, r1
 }
 
+// CreateUserDb provides a mock function with given fields: _a0
+func (_m *App) CreateUserDb(_a0 user.UserDb) (int, error) {
+	ret := _m.Called(_a0)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(user.UserDb) (int, error)); ok {
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(user.UserDb) int); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(user.UserDb) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DeleteAd provides a mock function with given fields: ctx, authorID, adID
 func (_m *App) DeleteAd(ctx context.Context, authorID int64, adID int64) (*ads.Ad, error) {
 	ret := _m.Called(ctx, authorID, adID)

@@ -9,3 +9,8 @@ type RepositoryUser interface {
 	GetUser(ctx context.Context, user_id int64) (*User, error)
 	DeleteUser(ctx context.Context, user_id int64) (error)
 }
+
+//go:generate mockery --output ../tests/mocks --name RepositoryDbUser
+type RepositoryDbUser interface {
+	CreateUserDb(user UserDb) (int, error)
+}

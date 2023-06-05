@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"crypto/sha1"
 	"fmt"
 	"time"
 
@@ -23,11 +24,13 @@ type validateStruct struct {
 type App interface {
 	AdApp
 	UserApp
+	UserDbApp
 }
 
 type appStruct struct {
 	adApp
-	userApp 
+	userApp
+	authApp
 }
 
 type AdApp interface {
@@ -208,7 +211,7 @@ type userApp struct {
 	return user, nil
  }
 
- func (a *userApp) DeleteUser(ctx context.Context, user_id int64) (error) {
+func (a *userApp) DeleteUser(ctx context.Context, user_id int64) (error) {
 	err := a.repository.DeleteUser(ctx, user_id)
 
 	if err != nil {
@@ -216,11 +219,34 @@ type userApp struct {
 	}
 
 	return nil
- }
+}
 
-func NewApp(repo ads.RepositryAd, repoUser user.RepositoryUser) App {
+type UserDbApp interface {
+	CreateUserDb(user user.UserDb) (int, error)
+}
+
+type authApp struct {
+	repository user.RepositoryDbUser
+}
+
+func (a *authApp) CreateUserDb(user user.UserDb) (int, error) {
+	user.Password = generatePasswordHash(user.Password)
+	return a.repository.CreateUserDb(user)
+}
+
+const salt = "hjqrhjqw124617ajfhajs"
+
+func generatePasswordHash(password string) string {
+	hash := sha1.New()
+	hash.Write([]byte(password))
+
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func NewApp(repo ads.RepositryAd, repoUser user.RepositoryUser, repoUserDb user.RepositoryDbUser) App {
 	return &appStruct{
 		adApp: adApp{repository: repo},
 		userApp: userApp{repository: repoUser},
+		authApp: authApp{repository: repoUserDb},
 	}
 }

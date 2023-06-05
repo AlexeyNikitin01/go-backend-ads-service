@@ -12,18 +12,34 @@ import (
 	"syscall"
 	"time"
 
-	"ads/internal/adapters/userrepo"
 	"ads/internal/adapters/adrepo"
+	"ads/internal/adapters/pgrepo"
+	"ads/internal/adapters/userrepo"
 	"ads/internal/app"
 	grpcPort "ads/internal/ports/grpc"
 	"ads/internal/ports/httpgin"
 
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	a := app.NewApp(adrepo.New(), userrepo.New())
+	logrus.SetFormatter(new(logrus.JSONFormatter))
+
+	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
+		Host:     "db",
+		Port:     "5432",
+		Username: "postgres",
+		DBName:   "postgres",
+		SSLMode:  "disable",
+		Password: "qwerty",
+	})
+	if err != nil {
+		logrus.Fatalf("failed to initialize db: %s", err.Error())
+	}
+
+	a := app.NewApp(adrepo.New(), userrepo.New(), pgrepo.NewAuthPostgres(db))
 
 	svr := httpgin.NewHTTPServer(":18080", a)
 

@@ -79,6 +79,13 @@ type createUserResponse struct {
 	Activate bool	`json:"activate"`
 }
 
+type createUserDB struct {
+	Id       int    `json:"-" db:"id"`
+	Name     string `json:"name" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func AdSuccessResponse(ad *ads.Ad) *gin.H {
 	return &gin.H{
 		"data": adResponse{
@@ -144,5 +151,12 @@ func DeleteUserSuccess(user_id int64) *gin.H {
 func ErrUser(err error) *gin.H {
 	return &gin.H{
 		"error": err,
+	}
+}
+
+func CreateUserDbSuccess(id int) *gin.H {
+	return &gin.H{
+		"id": id,
+		"error": nil,
 	}
 }

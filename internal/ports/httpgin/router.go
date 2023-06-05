@@ -18,4 +18,6 @@ func AppRouter(r *gin.RouterGroup, a app.App) {
 	r.PUT("/user/update/:user_id", updateUser(a))
 	r.DELETE("/user/delete/:user_id", deleteUser(a))
 	r.GET("/user/:user_id", getUser(a))
+
+	r.POST("/sign-up", signUp(a))
 }

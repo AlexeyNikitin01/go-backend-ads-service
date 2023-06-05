@@ -23,11 +23,12 @@ func TestProductService_CreateUser(t *testing.T) {
 
 	repoAd := &mocks.RepositryAd{}
 	repoUser := &mocks.RepositoryUser{}
+	repoPgUser := &mocks.RepositoryDbUser{}
 	repoUser.
 	On("AddUser", mock.Anything, &user.User{NickName: "Alex", Email: "email@tin.com"}).
 	Return(int64(0), nil)
 
-	a := app.NewApp(repoAd, repoUser)
+	a := app.NewApp(repoAd, repoUser, repoPgUser)
 
 	u, err := a.CreateUser(ctx, "Alex", "email@tin.com")
 
@@ -41,11 +42,12 @@ func TestProductService_CreateAd(t *testing.T) {
 
 	repoAd := &mocks.RepositryAd{}
 	repoUser := &mocks.RepositoryUser{}
+	repoPgUser := &mocks.RepositoryDbUser{}
 	repoUser.
 	On("AddUser", mock.Anything, &user.User{NickName: "Alex", Email: "email@tin.com"}).
 	Return(int64(0), nil)
 
-	a := app.NewApp(repoAd, repoUser)
+	a := app.NewApp(repoAd, repoUser, repoPgUser)
 
 	u, err := a.CreateUser(ctx, "Alex", "email@tin.com")
 
