@@ -195,20 +195,6 @@ func (tc *testClient) updateAd(userID int64, adID int64, title string, text stri
 	return response, nil
 }
 
-func (tc *testClient) listAds() (adsResponse, error) {
-	req, err := http.NewRequest(http.MethodGet, tc.baseURL+"/api/v1/ads", nil)
-	if err != nil {
-		return adsResponse{}, fmt.Errorf("unable to create request: %w", err)
-	}
-
-	var response adsResponse
-	err = tc.getResponse(req, &response)
-	if err != nil {
-		return adsResponse{}, err
-	}
-	return response, nil
-}
-
 func (tc *testClient) listAdsAuthor(author_id int64) (adsResponse, error) {
 	body := map[string]any{
 		"author_id": author_id,
@@ -427,3 +413,17 @@ func (tc *testClient) getUser(userID int64) (userResponse, error) {
 
 	return response, nil
 }
+
+// func (tc *testClient) listAds() (adsResponse, error) {
+// 	req, err := http.NewRequest(http.MethodGet, tc.baseURL+"/api/v1/ads", nil)
+// 	if err != nil {
+// 		return adsResponse{}, fmt.Errorf("unable to create request: %w", err)
+// 	}
+
+// 	var response adsResponse
+// 	err = tc.getResponse(req, &response)
+// 	if err != nil {
+// 		return adsResponse{}, err
+// 	}
+// 	return response, nil
+// }
