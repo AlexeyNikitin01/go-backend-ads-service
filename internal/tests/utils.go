@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"ads/internal/adapters/adrepo"
-	"ads/internal/adapters/pgrepo"
 	"ads/internal/adapters/userrepo"
 	"ads/internal/app"
 	"ads/internal/ports/httpgin"
+	"ads/internal/tests/mocks"
 
 	"github.com/sirupsen/logrus"
 )
@@ -69,19 +69,8 @@ type testClient struct {
 func getTestClient() *testClient {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		DBName:   "postgres",
-		SSLMode:  "disable",
-		Password: "qwerty",
-	})
-	if err != nil {
-		logrus.Fatalf("failed to initialize db: %s", err.Error())
-	}
-
-	a := app.NewApp(adrepo.New(), userrepo.New(), pgrepo.NewAuthPostgres(db))
+	db := &mocks.RepositoryDbUser{}
+	a := app.NewApp(adrepo.New(), userrepo.New(), db)
 	server := httpgin.NewHTTPServer(":18080", a)
 	testServer := httptest.NewServer(server.Handler)
 
@@ -203,20 +192,6 @@ func (tc *testClient) updateAd(userID int64, adID int64, title string, text stri
 		return adResponse{}, err
 	}
 
-	return response, nil
-}
-
-func (tc *testClient) listAds() (adsResponse, error) {
-	req, err := http.NewRequest(http.MethodGet, tc.baseURL+"/api/v1/ads", nil)
-	if err != nil {
-		return adsResponse{}, fmt.Errorf("unable to create request: %w", err)
-	}
-
-	var response adsResponse
-	err = tc.getResponse(req, &response)
-	if err != nil {
-		return adsResponse{}, err
-	}
 	return response, nil
 }
 
@@ -438,3 +413,17 @@ func (tc *testClient) getUser(userID int64) (userResponse, error) {
 
 	return response, nil
 }
+
+// func (tc *testClient) listAds() (adsResponse, error) {
+// 	req, err := http.NewRequest(http.MethodGet, tc.baseURL+"/api/v1/ads", nil)
+// 	if err != nil {
+// 		return adsResponse{}, fmt.Errorf("unable to create request: %w", err)
+// 	}
+
+// 	var response adsResponse
+// 	err = tc.getResponse(req, &response)
+// 	if err != nil {
+// 		return adsResponse{}, err
+// 	}
+// 	return response, nil
+// }
