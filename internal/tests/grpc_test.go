@@ -74,19 +74,9 @@ func Client(t *testing.T) (grpcPort.AdServiceClient, context.Context) {
 
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		DBName:   "postgres",
-		SSLMode:  "disable",
-		Password: "qwerty",
-	})
-	if err != nil {
-		logrus.Fatalf("failed to initialize db: %s", err.Error())
-	}
+	db := &mocks.RepositoryDbUser{}
 
-	a := app.NewApp(adrepo.New(), userrepo.New(), pgrepo.NewAuthPostgres(db))
+	a := app.NewApp(adrepo.New(), userrepo.New(), db)
 
 	svc := grpcPort.NewService(a)
 	grpcPort.RegisterAdServiceServer(srv, svc)
