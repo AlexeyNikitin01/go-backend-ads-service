@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"ads/internal/adapters/adrepo"
-	"ads/internal/adapters/pgrepo"
 	"ads/internal/adapters/userrepo"
 	"ads/internal/app"
 	grpcPort "ads/internal/ports/grpc"
