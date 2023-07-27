@@ -222,16 +222,22 @@ func (a *userApp) DeleteUser(ctx context.Context, user_id int64) (error) {
 }
 
 type UserDbApp interface {
-	CreateUserDb(user user.UserDb) (int, error)
+	CreateUserDb(user user.UserDb) (*user.UserDb, error)
+	GetUserDb(username, password string) (*user.UserDb, error)
+	CheckUserDb(id int) (*user.UserDb, error)
+	UpdateUserDb(username string, id int) (*user.UserDb, error)
+	DeleteUserDb(id int) (*user.UserDb, error)
 }
 
 type authApp struct {
 	repository user.RepositoryDbUser
 }
 
-func (a *authApp) CreateUserDb(user user.UserDb) (int, error) {
+func (a *authApp) CreateUserDb(user user.UserDb) (*user.UserDb, error) {
 	user.Password = generatePasswordHash(user.Password)
-	return a.repository.CreateUserDb(user)
+	id, err := a.repository.CreateUserDb(user)
+	user.Id = id
+	return &user, err
 }
 
 const salt = "hjqrhjqw124617ajfhajs"
@@ -241,6 +247,24 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (a *authApp) GetUserDb(username, password string) (*user.UserDb, error) {
+	password = generatePasswordHash(password)
+	u, err := a.repository.GetUser(username, password)
+	return u, err
+}
+
+func (a *authApp) CheckUserDb(id int) (*user.UserDb, error) {
+	return a.repository.CheckUserDb(id)
+}
+
+func (a *authApp) UpdateUserDb(username string, id int) (*user.UserDb, error) {
+	return a.repository.UpdateUserDb(username, id)
+}
+
+func (a *authApp) DeleteUserDb(id int) (*user.UserDb, error) {
+	return a.repository.DeleteUserDb(id)
 }
 
 func NewApp(repo ads.RepositryAd, repoUser user.RepositoryUser, repoUserDb user.RepositoryDbUser) App {

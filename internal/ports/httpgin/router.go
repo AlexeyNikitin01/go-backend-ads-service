@@ -20,4 +20,8 @@ func AppRouter(r *gin.RouterGroup, a app.App) {
 	r.GET("/user/:user_id", getUser(a))
 
 	r.POST("/sign-up", signUp(a))
+	r.POST("/sign-in", signIn(a))
+	r.POST("/check-user", checkUserDb(a))
+	r.POST("/delete-user", deleteUserDb(a))
+	r.POST("/update-user", updateUserDb(a))
 }

@@ -28,7 +28,7 @@ func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
-		Host:     "db",
+		Host:     "localhost",
 		Port:     "5432",
 		Username: "postgres",
 		DBName:   "postgres",
