@@ -398,32 +398,165 @@ func getUser(a app.App) gin.HandlerFunc {
 
 func signUp(a app.App) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var requestCreateUserDB createUserDB
+		var reqUserDB UserResponseDB
 
-		if err := c.Bind(&requestCreateUserDB); err != nil {
+		if err := c.Bind(&reqUserDB); err != nil {
 			c.JSON(400, ErrUser(err))
 			log.Println("error user get", err)
 			return
 		}
-
-		id, err := a.CreateUserDb(user.UserDb{
-			Name: requestCreateUserDB.Name,
-			Username: requestCreateUserDB.Username,
-			Password: requestCreateUserDB.Password,
+		
+		u, err := a.CreateUserDb(user.UserDb{
+			Name: reqUserDB.Name,
+			Username: reqUserDB.Username,
+			Password: reqUserDB.Password,
 		})
 		if err != nil {
 			if errors.Is(err, app.ErrBadRequest) {
-				c.JSON(400, AdErrorResponse(err))
+				c.JSON(400, UserErrorDB(err))
 			} else {
-				c.JSON(500, AdErrorResponse(err))
+				c.JSON(500, UserErrorDB(err))
 			}
-			c.JSON(200, AdErrorResponse(err))
-			log.Println("error create user", err)
+			log.Println("ALARM -- !!!ERROR!!! create user in database postgres",
+						"func -- signUp",
+						err)
+			c.JSON(200, UserErrorDB(err))
 			return
 		}
 		c.Status(http.StatusOK)
-		c.JSON(200, CreateUserDbSuccess(id))
+		c.JSON(200, UserSuccessDB(u))
+		log.Println(
+			"Success create user in database postgres ",
+			"status code ", http.StatusOK,
+			"user id ", u.Id, 
+			"username ", u.Username,
+			"name ", u.Name,)
+	}
+}
+
+func signIn(a app.App) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reqUserDB UserResponseDB
+
+		if err := c.Bind(&reqUserDB); err != nil {
+			c.JSON(400, ErrUser(err))
+			log.Println("error user get -- func signIn ", err)
+			return
+		}
+
+		u, err := a.GetUserDb(reqUserDB.Username, reqUserDB.Password)
+		if err != nil {
+			if errors.Is(err, app.ErrBadRequest) {
+				c.JSON(400, UserErrorDB(err))
+			} else {
+				c.JSON(500, UserErrorDB(err))
+			}
+			c.JSON(200, UserErrorDB(err))
+			log.Println("ALARM !! ERROR !! get user -- func signIn ", err)
+			return
+		}
+		c.Status(http.StatusOK)
+		c.JSON(200, UserSuccessDB(u))
 		log.Default()
-		log.Println("Success create user", http.StatusOK, "user id", id)
+		log.Println(
+			"Success get user -- func signIn ", http.StatusOK, 
+			"user id ", u.Id,
+			"username: ", u.Username,
+			"name: ", u.Name,
+		)
+	}
+}
+
+func checkUserDb(a app.App) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reqUserDB UserResponseDB
+
+		if err := c.Bind(&reqUserDB); err != nil {
+			c.JSON(400, ErrUser(err))
+			log.Println("error user get -- func checkUserDb ", err)
+			return
+		}
+		u, err := a.CheckUserDb(reqUserDB.Id)
+		if err != nil {
+			if errors.Is(err, app.ErrBadRequest) {
+				c.JSON(400, UserErrorDB(err))
+			} else {
+				c.JSON(500, UserErrorDB(err))
+			}
+			c.JSON(200, UserErrorDB(err))
+			log.Println("ALARM !! ERROR !! checkUserDb -- func checkUserDb", err)
+			return
+		}
+		c.Status(http.StatusOK)
+		c.JSON(200, UserSuccessDB(u))
+		log.Default()
+		log.Println(
+			"Success check user -- func checkUserDb ", http.StatusOK,
+			"user id ", u.Id,
+			"username: ", u.Username,
+			"name: ", u.Name,
+		)
+	}
+}
+
+func deleteUserDb(a app.App) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reqUserDB UserResponseDB
+		if err := c.Bind(&reqUserDB); err != nil {
+			c.JSON(400, ErrUser(err))
+			log.Println("error user get -- func checkUserDb ", err)
+			return
+		}
+		u, err := a.DeleteUserDb(reqUserDB.Id)
+		if err != nil {
+			if errors.Is(err, app.ErrBadRequest) {
+				c.JSON(400, UserErrorDB(err))
+			} else {
+				c.JSON(500, UserErrorDB(err))
+			}
+			c.JSON(200, UserErrorDB(err))
+			log.Println("ALARM !! ERROR !! deleteUserDb -- func deleteUserDb", err)
+			return
+		}
+		c.Status(http.StatusOK)
+		c.JSON(200, UserSuccessDB(u))
+		log.Default()
+		log.Println(
+			"Success deleteUserDb -- func deleteUserDb ", http.StatusOK,
+			"user id ", u.Id,
+			"username: ", u.Username,
+			"name: ", u.Name,
+		)
+	}
+}
+
+func updateUserDb(a app.App) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reqUserDB UserResponseDB
+		if err := c.Bind(&reqUserDB); err != nil {
+			c.JSON(400, ErrUser(err))
+			log.Println("error user get -- func checkUserDb ", err)
+			return
+		}
+		u, err := a.UpdateUserDb(reqUserDB.Username, reqUserDB.Id)
+		if err != nil {
+			if errors.Is(err, app.ErrBadRequest) {
+				c.JSON(400, UserErrorDB(err))
+			} else {
+				c.JSON(500, UserErrorDB(err))
+			}
+			c.JSON(200, UserErrorDB(err))
+			log.Println("ALARM !! ERROR !! UpdateUserDb -- func UpdateUserDb", err)
+			return
+		}
+		c.Status(http.StatusOK)
+		c.JSON(200, UserSuccessDB(u))
+		log.Default()
+		log.Println(
+			"Success UpdateUserDb -- func UpdateUserDb ", http.StatusOK,
+			"user id ", u.Id,
+			"username: ", u.Username,
+			"name: ", u.Name,
+		)
 	}
 }

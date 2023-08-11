@@ -3,8 +3,8 @@
 package mocks
 
 import (
-	context "context"
 	user "ads/internal/user"
+	context "context"
 
 	mock "github.com/stretchr/testify/mock"
 )

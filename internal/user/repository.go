@@ -12,5 +12,9 @@ type RepositoryUser interface {
 
 //go:generate mockery --output ../tests/mocks --name RepositoryDbUser
 type RepositoryDbUser interface {
-	CreateUserDb(user UserDb) (int, error)
+	CreateUserDb(user UserDb) (int, error) // return id --> app.go for user.id
+	GetUser(username, password string) (*UserDb, error)
+	CheckUserDb(id int) (*UserDb, error)
+	UpdateUserDb(username string, id int) (*UserDb, error)
+	DeleteUserDb(id int) (*UserDb, error)
 }

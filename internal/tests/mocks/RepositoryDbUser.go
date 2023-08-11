@@ -13,6 +13,32 @@ type RepositoryDbUser struct {
 	mock.Mock
 }
 
+// CheckUserDb provides a mock function with given fields: id
+func (_m *RepositoryDbUser) CheckUserDb(id int) (*user.UserDb, error) {
+	ret := _m.Called(id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (*user.UserDb, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) *user.UserDb); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateUserDb provides a mock function with given fields: _a0
 func (_m *RepositoryDbUser) CreateUserDb(_a0 user.UserDb) (int, error) {
 	ret := _m.Called(_a0)
@@ -30,6 +56,84 @@ func (_m *RepositoryDbUser) CreateUserDb(_a0 user.UserDb) (int, error) {
 
 	if rf, ok := ret.Get(1).(func(user.UserDb) error); ok {
 		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteUserDb provides a mock function with given fields: id
+func (_m *RepositoryDbUser) DeleteUserDb(id int) (*user.UserDb, error) {
+	ret := _m.Called(id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (*user.UserDb, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) *user.UserDb); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUser provides a mock function with given fields: username, password
+func (_m *RepositoryDbUser) GetUser(username string, password string) (*user.UserDb, error) {
+	ret := _m.Called(username, password)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string) (*user.UserDb, error)); ok {
+		return rf(username, password)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) *user.UserDb); ok {
+		r0 = rf(username, password)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(username, password)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateUserDb provides a mock function with given fields: username, id
+func (_m *RepositoryDbUser) UpdateUserDb(username string, id int) (*user.UserDb, error) {
+	ret := _m.Called(username, id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int) (*user.UserDb, error)); ok {
+		return rf(username, id)
+	}
+	if rf, ok := ret.Get(0).(func(string, int) *user.UserDb); ok {
+		r0 = rf(username, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = rf(username, id)
 	} else {
 		r1 = ret.Error(1)
 	}

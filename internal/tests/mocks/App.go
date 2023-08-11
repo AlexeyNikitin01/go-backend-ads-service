@@ -57,6 +57,32 @@ func (_m *App) CheckUser(ctx context.Context, userID int64) error {
 	return r0
 }
 
+// CheckUserDb provides a mock function with given fields: id
+func (_m *App) CheckUserDb(id int) (*user.UserDb, error) {
+	ret := _m.Called(id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (*user.UserDb, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) *user.UserDb); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateAd provides a mock function with given fields: ctx, title, text, authorID
 func (_m *App) CreateAd(ctx context.Context, title string, text string, authorID int64) (*ads.Ad, error) {
 	ret := _m.Called(ctx, title, text, authorID)
@@ -110,18 +136,20 @@ func (_m *App) CreateUser(ctx context.Context, nickname string, email string) (*
 }
 
 // CreateUserDb provides a mock function with given fields: _a0
-func (_m *App) CreateUserDb(_a0 user.UserDb) (int, error) {
+func (_m *App) CreateUserDb(_a0 user.UserDb) (*user.UserDb, error) {
 	ret := _m.Called(_a0)
 
-	var r0 int
+	var r0 *user.UserDb
 	var r1 error
-	if rf, ok := ret.Get(0).(func(user.UserDb) (int, error)); ok {
+	if rf, ok := ret.Get(0).(func(user.UserDb) (*user.UserDb, error)); ok {
 		return rf(_a0)
 	}
-	if rf, ok := ret.Get(0).(func(user.UserDb) int); ok {
+	if rf, ok := ret.Get(0).(func(user.UserDb) *user.UserDb); ok {
 		r0 = rf(_a0)
 	} else {
-		r0 = ret.Get(0).(int)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
 	}
 
 	if rf, ok := ret.Get(1).(func(user.UserDb) error); ok {
@@ -173,6 +201,32 @@ func (_m *App) DeleteUser(ctx context.Context, userID int64) error {
 	return r0
 }
 
+// DeleteUserDb provides a mock function with given fields: id
+func (_m *App) DeleteUserDb(id int) (*user.UserDb, error) {
+	ret := _m.Called(id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (*user.UserDb, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) *user.UserDb); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAd provides a mock function with given fields: ctx, adID
 func (_m *App) GetAd(ctx context.Context, adID int64) (*ads.Ad, error) {
 	ret := _m.Called(ctx, adID)
@@ -218,6 +272,32 @@ func (_m *App) GetUser(ctx context.Context, userID int64) (*user.User, error) {
 
 	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
 		r1 = rf(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUserDb provides a mock function with given fields: username, password
+func (_m *App) GetUserDb(username string, password string) (*user.UserDb, error) {
+	ret := _m.Called(username, password)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string) (*user.UserDb, error)); ok {
+		return rf(username, password)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) *user.UserDb); ok {
+		r0 = rf(username, password)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(username, password)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -374,6 +454,32 @@ func (_m *App) UpdateUser(ctx context.Context, nickname string, email string, us
 
 	if rf, ok := ret.Get(1).(func(context.Context, string, string, int64, bool) error); ok {
 		r1 = rf(ctx, nickname, email, userID, activate)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateUserDb provides a mock function with given fields: username, id
+func (_m *App) UpdateUserDb(username string, id int) (*user.UserDb, error) {
+	ret := _m.Called(username, id)
+
+	var r0 *user.UserDb
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, int) (*user.UserDb, error)); ok {
+		return rf(username, id)
+	}
+	if rf, ok := ret.Get(0).(func(string, int) *user.UserDb); ok {
+		r0 = rf(username, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.UserDb)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int) error); ok {
+		r1 = rf(username, id)
 	} else {
 		r1 = ret.Error(1)
 	}

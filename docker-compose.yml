@@ -4,20 +4,22 @@ services:
   ads:
     restart: always
     build: ./
-    command: ./opt/ads/app
+    command: go run cmd/main/main.go
     ports:
       - 18080:18080
     depends_on:
       - db
-    environment:
-      - DB_PASSWORD=qwerty
+    env_file:
+      - ./.env
 
   db:
     restart: always
-    image: postgres:latest
+    image: postgres:alpine
     volumes:
     - ./.database/postgres/data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=qwerty
+      - USERNAME=${DB_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DBNAME}
     ports:
       - 5432:5432
