@@ -22,18 +22,24 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
+	var envs map[string]string
+    envs, err := godotenv.Read(".env")
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
 	db, err := pgrepo.NewPostgresDB(pgrepo.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		DBName:   "postgres",
-		SSLMode:  "disable",
-		Password: "qwerty",
+		Host:     envs["HOST"],
+		Port:     envs["PORT"],
+		Username: envs["USERNAME"],
+		DBName:   envs["DBNAME"],
+		SSLMode:  envs["SSLMODE"],
+		Password: envs["POSTGRES_PASSWORD"],
 	})
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
